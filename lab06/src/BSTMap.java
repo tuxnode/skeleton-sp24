@@ -1,4 +1,4 @@
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.Iterator;
 
@@ -62,7 +62,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         if (cmp < 0) {
             return get(node.left, key);
         } else if (cmp > 0) {
-            return get(node.left, key);
+            return get(node.right, key);
         } else {
             return node.value;
         }
@@ -104,7 +104,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     @Override
     public Set<K> keySet() {
-        Set<K> ret = new HashSet<>();
+        Set<K> ret = new LinkedHashSet<>();
         fillKeys(root, ret);
         return ret;
     }
@@ -113,7 +113,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         if (node == null) {
             return;
         }
-        fillKeys(node.right, set);
+        fillKeys(node.left, set);
         set.add(node.key);
         fillKeys(node.right, set);
     }
