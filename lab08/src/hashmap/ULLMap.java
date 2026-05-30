@@ -1,5 +1,9 @@
 package hashmap;
 
+import org.jaxen.function.ext.EvaluateFunction;
+
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -147,12 +151,36 @@ public class ULLMap<K, V>  implements Map61B<K, V> {
 
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        if (key == null || list == null) {
+            return null;
+        }
+
+        if (list.key.equals(key)) {
+            V ret = list.val;
+            list = list.next;
+            size--;
+            return ret;
+        }
+
+        for (Node iter = list; iter.next != null; iter = iter.next) {
+            if (iter.next.key.equals(key)) {
+                V ret = iter.next.val;
+                iter.next = iter.next.next;
+                size--;
+                return ret;
+            }
+        }
+        return null;
     }
 
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        // throw new UnsupportedOperationException();
+        Set<K> keys = new HashSet<>();
+        for (K key : this) {
+            keys.add(key);
+        }
+        return keys;
     }
 
 }
