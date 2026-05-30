@@ -241,11 +241,33 @@ public class GameOfLife {
         // TODO: The current state is represented by TETiles[][] tiles and the next
         // TODO: state/evolution should be returned in TETile[][] nextGen.
 
+        for (int x = 0; x < this.width; x++) {
+            for (int y = 0; y < this.height; y++) {
+                int neighbors = 0;
+                boolean isAlive;
+                for (int i = x - 1; i <= x + 1; i++) {
+                    for (int j = y - 1; j <= y + 1; j++) {
+                        if (i == x && j == y) continue;
+                        if (i < 0 || j < 0 || i >= this.width || j >= this.height) continue;
 
-
-
+                        if (tiles[i][j] == Tileset.CELL) neighbors++;
+                    }
+                }
+                if (tiles[x][y] == Tileset.CELL) {
+                    if (neighbors < 2 || neighbors > 3) {
+                        nextGen[x][y] = Tileset.NOTHING;
+                    } else {
+                        nextGen[x][y] = Tileset.CELL;
+                    }
+                } else {
+                    if (neighbors == 3) {
+                        nextGen[x][y] = Tileset.CELL;
+                    }
+                }
+            }
+        }
         // TODO: Returns the next evolution in TETile[][] nextGen.
-        return null;
+        return nextGen;
     }
 
     /**
@@ -276,8 +298,15 @@ public class GameOfLife {
         // TODO: the orientation is correct! Each line in the board should
         // TODO: end with a new line character.
 
-
-
+        StringBuilder sb = new StringBuilder();
+        sb.append(width).append(" ").append(height).append("\n");
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = 0; x < width; x++) {
+                sb.append(currentState[x][y] == Tileset.CELL ? "1" : "0");
+            }
+            sb.append("\n");
+        }
+        FileUtils.writeFile(SAVE_FILE, sb.toString());
 
 
     }
@@ -287,25 +316,23 @@ public class GameOfLife {
      * 0 represents NOTHING, 1 represents a CELL.
      */
     public TETile[][] loadBoard(String filename) {
-        // TODO: Read in the file.
+        String content = FileUtils.readFile(filename);
+        String[] lines = content.split("\n");
 
-        // TODO: Split the file based on the new line character.
+        String[] dims = lines[0].split(" ");
+        width = Integer.parseInt(dims[0]);
+        height = Integer.parseInt(dims[1]);
 
-        // TODO: Grab and set the dimensions from the first line.
+        TETile[][] board = new TETile[width][height];
 
-        // TODO: Create a TETile[][] to load the board from the file into
-        // TODO: and any additional variables that you think might help.
+        for (int y = 0; y < height; y++) {
+            String row = lines[height - y];
+            for (int x = 0; x < width; x++) {
+                board[x][y] = row.charAt(x) == '1' ? Tileset.CELL : Tileset.NOTHING;
+            }
+        }
 
-
-        // TODO: Load the state of the board from the given filename. You can
-        // TODO: use the provided builder variable to help you and FileUtils
-        // TODO: functions. Make sure the orientation is correct!
-
-
-
-
-        // TODO: Return the board you loaded. Replace/delete this line.
-        return null;
+        return board;
     }
 
     /**
