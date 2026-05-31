@@ -5,6 +5,7 @@ import tileengine.TETile;
 import tileengine.TERenderer;
 import tileengine.Tileset;
 
+import java.awt.*;
 import java.util.*;
 
 /**
@@ -81,7 +82,6 @@ public class Tetris {
      * depending on the user's input.
      */
     private void updateBoard() {
-        // Grabs the current piece.
         Tetromino t = currentTetromino;
         if (actionDeltaTime() > 1000) {
             movement.dropDown();
@@ -90,9 +90,15 @@ public class Tetris {
             return;
         }
 
-        // TODO: Implement interactivity, so the user is able to input the keystrokes to move
-        //  the tile and rotate the tile. You'll want to use some provided helper methods here.
-
+        if (StdDraw.hasNextKeyTyped()) {
+            char key = StdDraw.nextKeyTyped();
+            switch (key) {
+                case 'a' -> movement.tryMove(-1, 0);
+                case 'd' -> movement.tryMove(1, 0);
+                case 's' -> movement.tryMove(0, -1);
+                case 'w' -> movement.rotateRight();
+            }
+        }
 
         Tetromino.draw(t, board, t.pos.x, t.pos.y);
     }
@@ -103,8 +109,13 @@ public class Tetris {
      * @param linesCleared
      */
     private void incrementScore(int linesCleared) {
-        // TODO: Increment the score based on the number of lines cleared.
-
+        score += switch (linesCleared) {
+            case 1 -> 100;
+            case 2 -> 300;
+            case 3 -> 500;
+            case 4 -> 800;
+            default -> 0;
+        };
     }
 
     /**
@@ -113,13 +124,31 @@ public class Tetris {
      * @param tiles
      */
     public void clearLines(TETile[][] tiles) {
-        // Keeps track of the current number lines cleared
         int linesCleared = 0;
 
-        // TODO: Check how many lines have been completed and clear it the rows if completed.
+        for (int y = 0; y < GAME_HEIGHT; y++) {
+            boolean full = true;
+            for (int x = 0; x < WIDTH; x++) {
+                if (tiles[x][y] == Tileset.NOTHING) {
+                    full = false;
+                    break;
+                }
+            }
+            if (full) {
+                linesCleared++;
+                for (int row = y; row < GAME_HEIGHT - 1; row++) {
+                    for (int x = 0; x < WIDTH; x++) {
+                        tiles[x][row] = tiles[x][row + 1];
+                    }
+                }
+                for (int x = 0; x < WIDTH; x++) {
+                    tiles[x][GAME_HEIGHT - 1] = Tileset.NOTHING;
+                }
+                y--;
+            }
+        }
 
-        // TODO: Increment the score based on the number of lines cleared.
-
+        incrementScore(linesCleared);
         fillAux();
     }
 
@@ -130,18 +159,22 @@ public class Tetris {
     public void runGame() {
         resetActionTimer();
 
-        // TODO: Set up your game loop. The game should keep running until the game is over.
-        // Use helper methods inside your game loop, according to the spec description.
-
-
+        while (!isGameOver()) {
+            if (currentTetromino == null) {
+                clearLines(board);
+                spawnPiece();
+            }
+            updateBoard();
+            renderBoard();
+        }
     }
 
     /**
      * Renders the score using the StdDraw library.
      */
     private void renderScore() {
-        // TODO: Use the StdDraw library to draw out the score.
-
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.text(13, 18, "Score: " + score);
     }
 
     /**
@@ -193,7 +226,7 @@ public class Tetris {
         auxFilled = false;
         movement = new Movement(WIDTH, GAME_HEIGHT, this);
 
-        ter.initialize(WIDTH, HEIGHT);
+        ter.initialize(WIDTH + 6, HEIGHT);
         fillBoard(Tileset.NOTHING);
         fillAux();
     }
