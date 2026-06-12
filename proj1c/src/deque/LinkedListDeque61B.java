@@ -94,6 +94,12 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
         return getRecursiveHelper(sentinel.next, index);
     }
 
+    @Override
+    public T peekFirst() {
+        if (isEmpty()) return null;
+        return sentinel.next.item;
+    }
+
     private T getRecursiveHelper(Node curr, int index) {
         if (index == 0) {
             return curr.item;

@@ -126,4 +126,9 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
     public T getRecursive(int index) {
         return get(index);
     }
+
+    @Override
+    public T peekFirst() {
+        return items[nextFirst];
+    }
 }
