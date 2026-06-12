@@ -3,9 +3,6 @@ package gh2;
 // TODO: maybe more imports
 
 import deque.LinkedListDeque61B;
-import net.sf.saxon.expr.Component;
-
-import java.util.SplittableRandom;
 
 //Note: This file will not compile until you complete the Deque61B implementations
 public class GuitarString {
@@ -18,8 +15,8 @@ public class GuitarString {
     /* Buffer for storing sound data. */
     // TODO: uncomment the following line once you're ready to start this portion
     // private Deque61B<Double> buffer;
-    private LinkedListDeque61B<Double> buffer;
-    private int capacity;
+    private final LinkedListDeque61B<Double> buffer;
+    private final int capacity;
 
     /* Create a guitar string of the given frequency.  */
     public GuitarString(double frequency) {
@@ -73,4 +70,3 @@ public class GuitarString {
         return buffer.peekFirst();
     }
 }
-    // TODO: Remove all comments that say TODO when you're done.
