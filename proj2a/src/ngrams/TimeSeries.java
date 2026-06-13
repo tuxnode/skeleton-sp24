@@ -1,7 +1,5 @@
 package ngrams;
 
-import org.junit.jupiter.params.aggregator.ArgumentAccessException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -94,7 +92,7 @@ public class TimeSeries extends TreeMap<Integer, Double> {
         TimeSeries result = new TimeSeries();
 
         result.putAll(this);
-        for (int year : ts.keySet()) {
+        for (int year : this.keySet()) {
             if (!ts.containsKey(year)) {
                 throw new IllegalArgumentException("The denominator TimeSeries is missing data for year: \" + year");
             }
