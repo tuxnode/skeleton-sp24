@@ -1,5 +1,8 @@
 package ngrams;
 
+import org.junit.jupiter.params.aggregator.ArgumentAccessException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -30,15 +33,18 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public TimeSeries(TimeSeries ts, int startYear, int endYear) {
         super();
-        // TODO: Fill in this constructor.
+        if (startYear > endYear) {
+            throw new IllegalArgumentException("Invalid Argument");
+        }
+
+        this.putAll(ts.subMap(startYear, true, endYear, true));
     }
 
     /**
      * Returns all years for this TimeSeries (in any order).
      */
     public List<Integer> years() {
-        // TODO: Fill in this method.
-        return null;
+        return new ArrayList<>(this.keySet());
     }
 
     /**
@@ -46,8 +52,7 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * Must be in the same order as years().
      */
     public List<Double> data() {
-        // TODO: Fill in this method.
-        return null;
+        return new ArrayList<>(this.values());
     }
 
     /**
@@ -60,8 +65,20 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * should store the value from the TimeSeries that contains that year.
      */
     public TimeSeries plus(TimeSeries ts) {
-        // TODO: Fill in this method.
-        return null;
+        TimeSeries retTs = new TimeSeries();
+
+        retTs.putAll(this);
+
+        for (int year : ts.keySet()) {
+            // 如果相同年份，则数值直接合并
+            if (retTs.containsKey(year)) {
+                double newValue = retTs.get(year) + ts.get(year);
+                retTs.put(year, newValue);
+            } else {
+                retTs.put(year, ts.get(year));
+            }
+        }
+        return retTs;
     }
 
     /**
@@ -74,8 +91,19 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * If TS has a year that is not in this TimeSeries, ignore it.
      */
     public TimeSeries dividedBy(TimeSeries ts) {
-        // TODO: Fill in this method.
-        return null;
+        TimeSeries result = new TimeSeries();
+
+        result.putAll(this);
+        for (int year : ts.keySet()) {
+            if (!ts.containsKey(year)) {
+                throw new IllegalArgumentException("The denominator TimeSeries is missing data for year: \" + year");
+            }
+
+            double dividend = this.get(year);
+            double divisor = ts.get(year);
+            result.put(year, dividend / divisor);
+        }
+        return result;
     }
 
     // TODO: Add any private helper methods.

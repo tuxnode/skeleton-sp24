@@ -9,10 +9,12 @@ import spark.Route;
 import java.util.Arrays;
 import java.util.List;
 
+// 通用网络请求处理
 public abstract class NgordnetQueryHandler implements Route {
     public abstract String handle(browser.NgordnetQuery q);
     private static final Gson gson = new Gson();
 
+    // helper function: 将字符串转化为List
     private static List<String> commaSeparatedStringToList(String s) {
         String[] requestedWords = s.split(",");
         for (int i = 0; i < requestedWords.length; i += 1) {
@@ -21,7 +23,9 @@ public abstract class NgordnetQueryHandler implements Route {
         return Arrays.asList(requestedWords);
     }
 
+    // 处理网络请求参数
     private static browser.NgordnetQuery readQueryMap(QueryParamsMap qm) {
+        // 从请求参数中分离word
         List<String> words = commaSeparatedStringToList(qm.get("words").value());
 
         int startYear;
@@ -31,13 +35,13 @@ public abstract class NgordnetQueryHandler implements Route {
         try {
             startYear = Integer.parseInt(qm.get("startYear").value());
         } catch(RuntimeException e) {
-            startYear = 1900;
+            startYear = 1900; // 默认年份
         }
 
         try {
             endYear = Integer.parseInt(qm.get("endYear").value());
         } catch(RuntimeException e) {
-            endYear = 2020;
+            endYear = 2020; // 默认年份
         }
 
         try {
