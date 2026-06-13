@@ -35,3 +35,5 @@ HW 1: 社交作业（了解课程规范，通常不需要写代码）。
 HW 2: Asymptotics & Disjoint Sets: 理论分析。计算代码的时间复杂度（Big-O），以及并查集的选择题。
 
 HW 3 & 4: 考试复习卷（Conceptual Homework）。这些作业通常在期中和期末前发布，涵盖了排序、图论、哈希等所有学过的概念，需要在 Gradescope 上完成。
+
+proj2 test data: https://drive.usercontent.google.com/download?id=1xGTZqCo5maiZjA307OPocmKDOTYlJXnz&authuser=0
